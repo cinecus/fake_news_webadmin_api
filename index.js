@@ -7,19 +7,23 @@ const helmet = require('helmet')
 const path = require('path')
 const httpContext = require('express-http-context')
 const fs = require('fs')
-const bodyparser = require('body-parser')
+const bodyParser = require('body-parser')
 const { create } = require('domain')
 const short_uuid = require('short-uuid')
+const multer = require('multer')
 
 const { debug } = require('./src/config/debug')
 const { onTestDatabase } = require('./src/db/connect_db')
 const { createApi } = require('./src/api')
 const app = express()
+const forms = multer()
 
 /*SETTING */
 app.use(helmet())
-app.use(bodyparser.urlencoded({ extended: true, limit: '50mb' }))
-app.use(bodyparser.json({ limit: '50mb' }))
+app.use(bodyParser.urlencoded({ extended: true }))
+app.use(forms.array());
+app.use(bodyParser.json({ limit: '50mb' }))
+// app.use(express.urlencoded({ extended: false }))
 
 app.use(httpContext.middleware)
 app.use((req, res, next) => {

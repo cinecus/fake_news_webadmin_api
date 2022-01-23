@@ -1,3 +1,4 @@
 ## ROUTER ##
- 	/api/v1/FEFU/auth
- 	/api/v1/FEFU/test
+ 	/api/v1/fncadmin/article
+ 	/api/v1/fncadmin/test
+ 	/api/v1/fncadmin/auth
