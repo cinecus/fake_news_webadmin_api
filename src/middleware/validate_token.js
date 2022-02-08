@@ -12,10 +12,10 @@ exports.validate_token = () => {
         }
         const origin = getOriginPath(req.originalUrl)
         const checkIgnore = ignoreCheckToken.indexOf(origin) >= 0
-        // if (checkIgnore || req.headers.authorization === process.env.BYPASS_KEY) {
-        //     console.log('completed validate1')
-        //     return next()
-        // }
+        if (checkIgnore || req.headers.authorization === process.env.BYPASS_KEY) {
+            debug(`By Pass token`)
+            return next()
+        }
         if (req.headers && req.headers.authorization) {
             debug(`access token: ${req.headers.authorization}`)
             jsonwebtoken.verify(req.headers.authorization, process.env.SIGN, (error, decode) => {
