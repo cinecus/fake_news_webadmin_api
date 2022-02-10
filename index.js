@@ -74,6 +74,6 @@ app.get('/', (req, res) => {
 //     return res.status(200).json({ success: true })
 // })
 
-app.listen(process.env.PORT, () => {
+app.listen(process.env.PORT || 8000, () => {
     debug(`Server is running port ${process.env.PORT}`)
 })

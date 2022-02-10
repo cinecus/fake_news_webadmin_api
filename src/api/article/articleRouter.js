@@ -18,7 +18,7 @@ articleRouter.post('/insertArticle',
 articleRouter.post('/editArticle',
     multer('article').single('image_cover'),
     validate_token(),
-    validate_schema(sch_onEditArticle),
+    // validate_schema(sch_onEditArticle),
     articleController.onEditArticle
 )
 
