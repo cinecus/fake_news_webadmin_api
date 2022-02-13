@@ -1,4 +1,3 @@
-const articleModel = require('./articleModel')
 const path = require('path');
 const mongoose = require('mongoose')
 const ObjectId = mongoose.Types.ObjectId
@@ -7,6 +6,9 @@ const fs = require('fs');
 
 const { err, debug } = require('../../config/debug')
 const { success, failed } = require('../../config/response')
+
+const articleModel = require('./articleModel')
+const authModel = require('../auth/authModel')
 
 class articleController {
     async onInsertArticle(req, res) {
@@ -73,10 +75,12 @@ class articleController {
     async onGetArticleTable(req, res) {
         try {
             let { article } = await articleModel.getAllArticle()
-            // article = article.map(el => {
-            //     const { image_cover_uri, content, ...temp_article } = el
-            //     return temp_article
+            // article = await Promise.all(article.map(async (el) => {
+            //     const user = await authModel.findOneUser({ _id: ObjectId(el.creator) })
+            //     if (user.completed) return { ...el, creator: `${user.result.first_name} ${user.result.last_name}` }
+            //     return { ...el }
             // })
+            // )
             success(res, 'get Article successfully', article)
         } catch (error) {
             debug(error)
@@ -87,7 +91,8 @@ class articleController {
     async onGetSingleArticle(req, res) {
         try {
             const { article } = await articleModel.findArticle(req.query.article_id)
-            success(res, 'get Single Article successfully', article)
+            const user = await authModel.findOneUser({ _id: ObjectId(article.creator) })
+            success(res, 'get Single Article successfully', { ...article, creator: `${user.result.first_name} ${user.result.last_name}` })
         } catch (error) {
             debug(error)
             failed(res, 'found issue')

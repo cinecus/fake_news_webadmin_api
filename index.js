@@ -32,7 +32,17 @@ app.use((req, res, next) => {
     next()
 })
 
-app.use(cors({ origin: true }))
+const whitelist = ['http://localhost:3000', 'https://mystifying-pasteur-59d14d.netlify.app', 'https://fakes-news-crypto-webadmin.vercel.app']
+const corsOptions = {
+    origin: function (origin, callback) {
+        if (whitelist.indexOf(origin) !== -1) {
+            callback(null, true)
+        } else {
+            callback(debug('Not allowed by CORS'))
+        }
+    }
+}
+app.use(cors(corsOptions))
 
 const limiter = ratelimit({
     windowMs: 60 * 1000,

@@ -29,7 +29,40 @@ class articleModel {
     }
     async getAllArticle() {
         try {
-            const article = await ArticleSchema.find({}).lean()
+            const pipeline = [
+                {
+                    '$lookup': {
+                        'from': 'user',
+                        'localField': 'creator',
+                        'foreignField': '_id',
+                        'as': 'user'
+                    }
+                }, {
+                    '$unwind': {
+                        'path': '$user'
+                    }
+                }, {
+                    '$project': {
+                        '_id': 1,
+                        'name': 1,
+                        'creator': {
+                            '$concat': ['$user.first_name', ' ', '$user.last_name']
+                        },
+                        'category': 1,
+                        'tag': 1,
+                        'image_cover_uri': 1,
+                        'content': 1,
+                        'is_show': 1,
+                        'created_date': 1,
+                        'updated_date': 1
+                    }
+                }, {
+                    '$sort': {
+                        'created_date': -1
+                    }
+                }
+            ]
+            const article = await ArticleSchema.aggregate(pipeline)
             return { completed: true, article }
         } catch (error) {
             console.log('error', error)
@@ -38,7 +71,7 @@ class articleModel {
     }
     async findArticle(id) {
         try {
-            const article = await ArticleSchema.findById(id)
+            const article = await ArticleSchema.findById(id).lean()
             return { completed: true, article }
         } catch (error) {
             console.log('error', error)
