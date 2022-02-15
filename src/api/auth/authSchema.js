@@ -13,7 +13,8 @@ const authSchema = mongoose.Schema({
         user_id: String,
         token_noti: String,
         create_date: { type: Date, default: moment() }
-    }]
+    }],
+    role: String
 }, { collection: 'user' })
 
 exports.AuthSchema = mongoose.model('user', authSchema)

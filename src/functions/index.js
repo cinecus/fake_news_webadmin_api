@@ -30,8 +30,8 @@ exports.decrypted = async (hashpassword, password) => {
     return bcrypt.compareSync(password, hashpassword)
 }
 
-exports.generateToken = (req, user_id, device_id = "") => {
-    let objToken = { user_id, device_id }
+exports.generateToken = (req, user_id, role) => {
+    let objToken = { user_id, role }
     req.token = jsonwebtoken.sign(objToken, process.env.SIGN, { expiresIn: '120d' })
     req.token_date = dayjs().format('YYYY-MM-DD HH:mm:ss')
     return

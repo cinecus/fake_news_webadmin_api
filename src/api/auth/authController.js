@@ -38,7 +38,7 @@ class authController {
                 if (!compare_password) {
                     return failed(res, 'username หรือ password ไม่ถูกต้อง')
                 }
-                generateToken(req, check_user.result._id)
+                generateToken(req, check_user.result._id, check_user.result.role)
                 return success(res, "เข้าสู่ระบบเรียบร้อย", { user: check_user.result, token_id: req.token })
             } else {
                 return failed(res, 'username หรือ password ไม่ถูกต้อง')

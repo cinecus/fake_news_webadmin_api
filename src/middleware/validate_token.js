@@ -26,12 +26,28 @@ exports.validate_token = () => {
                     debug('access user_id', decode.user_id)
                     req.token = req.headers.authorization
                     req.user_id = decode.user_id
+                    req.role = decode.role
                     req.device_id = decode.device_id
                     next()
                 }
             })
         } else {
             failed(res, 'token not found')
+        }
+    }
+}
+
+exports.validate_role = (require_role = 'observer') => {
+    return (req, res, next) => {
+        if (req.role === 'admin') {
+            debug('request role is admin')
+            next()
+        }
+        else if (req.role === require_role) {
+            debug(`request role is ${req.role}`)
+            next()
+        } else {
+            failed(res, 'not permission for this role')
         }
     }
 }
